@@ -58,7 +58,6 @@
         transition: transform 0.6s ease, opacity 0.6s ease;
       }
 
-      /* --- Thân phong bì --- */
       .envelope-body {
         position: absolute;
         inset: 0;
@@ -186,19 +185,19 @@
         z-index: 8;
       }
 
-      /* --- 💌 Thiệp mời sau khi mở --- */
       .card {
-        position: fixed;
+        position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(0.8);
         display: none;
         background: rgba(255, 255, 255, 0.98);
-        padding: 50px 60px;
+        padding: 40px 50px;
         border-radius: 26px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         text-align: center;
         max-width: 600px;
+
         opacity: 0;
         transition: transform 0.6s ease, opacity 0.6s ease;
       }
@@ -209,84 +208,61 @@
         opacity: 1;
       }
 
-      .card h1 {
-        color: #ff6b6b;
-        font-size: 2.6rem;
-        font-family: "Dancing Script", cursive;
-        margin-bottom: 12px;
-      }
-
-      .card p {
-        color: #444;
-        font-size: 1.1rem;
-        line-height: 1.8;
-        margin: 12px 0;
-        animation: fadeIn 1.2s ease both;
-      }
-
-      .card p strong {
-        color: #ff4d4d;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-
       /* --- Responsive --- */
-      @media (max-width: 768px) {
+      @media (max-width: 900px) {
         :root {
           --envelope-w: 280px;
           --envelope-h: 180px;
         }
-
-        .envelope-text {
-          font-size: 1.4rem;
-        }
-
         .card {
-          max-width: 90%;
-          padding: 35px 28px;
-          border-radius: 20px;
+          padding: 30px 35px;
         }
-
         .card h1 {
-          font-size: 2.2rem;
+          font-size: 2rem !important;
         }
+      }
 
+      @media (max-width: 600px) {
+        :root {
+          --envelope-w: 230px;
+          --envelope-h: 150px;
+        }
+        .envelope-text {
+          font-size: 1.2rem;
+        }
+        .card {
+          padding: 25px 25px;
+          border-radius: 16px;
+        }
+        .card h1 {
+          font-size: 1.7rem !important;
+        }
         .card p {
-          font-size: 1rem;
+          font-size: 0.95rem;
           line-height: 1.6;
         }
       }
 
-      @media (max-width: 480px) {
+      @media (max-width: 400px) {
         :root {
-          --envelope-w: 220px;
-          --envelope-h: 140px;
+          --envelope-w: 190px;
+          --envelope-h: 130px;
         }
-
-        .card {
-          padding: 28px 22px;
-          border-radius: 18px;
-        }
-
-        .card h1 {
-          font-size: 1.8rem;
-        }
-
-        .card p {
-          font-size: 0.95rem;
-        }
-
         .envelope-text {
-          font-size: 1.2rem;
+          font-size: 1rem;
+        }
+        .card {
+          padding: 18px 20px;
+          width: 95%;
+          border-radius: 12px;
+        }
+        .card h1 {
+          font-size: 1.4rem !important;
+          margin-bottom: 10px !important;
+        }
+        .card p {
+          font-size: 0.85rem !important;
+          line-height: 1.5;
         }
       }
     </style>
