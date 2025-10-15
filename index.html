@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thư xác nhận đi cà phê</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --envelope-w: 340px;
+        --envelope-h: 220px;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffd1ff);
+        background-size: 400% 400%;
+        animation: gradientBG 15s ease infinite;
+        font-family: "Montserrat", sans-serif;
+        overflow-x: hidden;
+      }
+
+      @keyframes gradientBG {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .envelope-container {
+        perspective: 1200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .envelope {
+        position: relative;
+        width: var(--envelope-w);
+        height: var(--envelope-h);
+        border-radius: 10px;
+        transform-style: preserve-3d;
+        perspective: 900px;
+        cursor: pointer;
+        transition: transform 0.6s ease, opacity 0.6s ease;
+      }
+
+      /* --- Thân phong bì --- */
+      .envelope-body {
+        position: absolute;
+        inset: 0;
+        border-radius: 10px;
+        background: linear-gradient(160deg, #ff7b7b, #ff5050);
+        box-shadow: inset 0 3px 8px rgba(255, 255, 255, 0.4),
+          0 8px 18px rgba(0, 0, 0, 0.15);
+        z-index: 3;
+        overflow: hidden;
+      }
+
+      .inner-paper {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 92%;
+        height: 46%;
+        background: #fff;
+        transform: translate(-50%, -50%) scaleY(0);
+        border-radius: 6px;
+        box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.15);
+        z-index: 2;
+        transition: transform 0.8s ease-in-out;
+        overflow: hidden;
+      }
+
+      .inner-paper::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        left: 10%;
+        width: 80%;
+        height: 90%;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.15) 0,
+          rgba(0, 0, 0, 0.15) 2px,
+          transparent 10px
+        );
+        opacity: 0.4;
+      }
+
+      .envelope.open .inner-paper {
+        transform: translate(-50%, -50%) scaleY(1);
+      }
+
+      .envelope-body::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 96%;
+        height: 50%;
+        background: linear-gradient(145deg, #ff7070, #ff4b4b);
+        transform: translateX(-50%);
+        clip-path: polygon(0 0, 50% 80%, 100% 0);
+        box-shadow: inset 0 6px 10px rgba(0, 0, 0, 0.25);
+        border-radius: 0 0 10px 10px;
+        z-index: 4;
+      }
+
+      .flap {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(150deg, #ff9a9a, #ff6f6f);
+        clip-path: polygon(0 0, 50% 52%, 100% 0);
+        transform-origin: top center;
+        border-radius: 10px;
+        z-index: 6;
+        transition: transform 1s cubic-bezier(0.25, 1, 0.3, 1);
+      }
+
+      .envelope.open .flap {
+        transform: rotateX(-180deg);
+      }
+
+      .letter {
+        position: absolute;
+        left: 50%;
+        top: 58%;
+        width: 88%;
+        height: 88%;
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+        transform: translate(-50%, 0) scale(1);
+        transition: transform 1.6s cubic-bezier(0.25, 1, 0.3, 1),
+          opacity 1s ease;
+        opacity: 0;
+        z-index: 2;
+        overflow: hidden;
+      }
+
+      .letter::before {
+        content: "";
+        position: absolute;
+        top: 18px;
+        left: 10%;
+        width: 80%;
+        height: 80%;
+        background: repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.1) 0,
+          rgba(0, 0, 0, 0.1) 2px,
+          transparent 10px
+        );
+        opacity: 0.6;
+      }
+
+      .envelope.open .letter {
+        opacity: 1;
+        transform: translate(-50%, -110%) scale(1.02);
+        z-index: 7;
+      }
+
+      .envelope-text {
+        position: absolute;
+        bottom: 16px;
+        width: 100%;
+        text-align: center;
+        font-family: "Dancing Script", cursive;
+        color: #fff;
+        font-size: 1.8rem;
+        text-shadow: 1px 2px 6px rgba(0, 0, 0, 0.25);
+        z-index: 8;
+      }
+
+      /* --- 💌 Thiệp mời sau khi mở --- */
+      .card {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.8);
+        display: none;
+        background: rgba(255, 255, 255, 0.98);
+        padding: 50px 60px;
+        border-radius: 26px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        text-align: center;
+        max-width: 600px;
+        opacity: 0;
+        transition: transform 0.6s ease, opacity 0.6s ease;
+      }
+
+      .card.show {
+        display: block;
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+      }
+
+      .card h1 {
+        color: #ff6b6b;
+        font-size: 2.6rem;
+        font-family: "Dancing Script", cursive;
+        margin-bottom: 12px;
+      }
+
+      .card p {
+        color: #444;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 12px 0;
+        animation: fadeIn 1.2s ease both;
+      }
+
+      .card p strong {
+        color: #ff4d4d;
+      }
+
+      .heart {
+        color: #ff6b6b;
+        font-size: 2rem;
+        animation: beat 1.4s ease-in-out infinite;
+        margin: 14px 0;
+      }
+
+      @keyframes beat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.25);
+        }
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .button {
+        display: inline-block;
+        margin-top: 22px;
+        padding: 12px 34px;
+        border-radius: 30px;
+        background: linear-gradient(45deg, #ff6b6b, #ff8989);
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        box-shadow: 0 8px 20px rgba(255, 107, 107, 0.18);
+        transition: transform 0.25s ease;
+      }
+
+      .button:hover {
+        transform: scale(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="envelope-container">
+      <div class="envelope" id="envelope">
+        <div class="flap"></div>
+        <div class="inner-paper"></div>
+        <div class="letter"></div>
+        <div class="envelope-body"></div>
+        <div class="envelope-text">Mở ra xem nhé ❤</div>
+      </div>
+    </div>
+
+    <div class="card" id="invitation">
+      <h1
+        style="
+          font-family: 'Dancing Script', cursive;
+          font-size: 35px;
+          color: #e07a5f;
+          margin-bottom: 15px;
+        "
+      >
+        Thư Xác Nhận Cuộc Hẹn
+      </h1>
+
+      <p
+        style="
+          font-family: 'Dancing Script', cursive;
+          font-size: 22px;
+          color: #6d6875;
+          margin-bottom: 20px;
+          letter-spacing: 0.3px;
+        "
+      >
+        Gửi bạn học sinh dưỡng thê (díp) toàn cúp tiết thầy,
+      </p>
+
+      <p style="margin-bottom: 15px; line-height: 1.6">
+        Như lịch đã thống nhất, ngày mai
+        <span style="color: #e07a5f; font-weight: 600">Thứ 5</span>
+        mình sẽ đón bạn để đi
+        <span style="color: #457b9d; font-weight: 600">cà phê học bài</span> ☕
+        và cùng nhau
+        <span style="color: #2a9d8f; font-weight: 600"
+          >nói chuyện nhảm nhí</span
+        >
+        💬 nhé~
+      </p>
+
+      <p style="margin-bottom: 20px; line-height: 1.6">
+        Hãy chuẩn bị một tâm thế thật
+        <em style="color: #e76f51">vui vẻ</em> và
+        <em style="color: #e76f51">thoải mái</em> nha! 🌸
+      </p>
+
+      <div style="text-align: left; margin-bottom: 15px">
+        <p style="margin: 5px 0">
+          <strong style="color: #264653">🕓 Thời gian:</strong>
+          <span style="color: #1d3557; font-weight: 600">16:00 - Thứ 5</span>
+        </p>
+        <p style="margin: 5px 0">
+          <strong style="color: #264653">📍 Địa điểm:</strong>
+          <span style="color: #1d3557; font-weight: 600">
+            Snow Coffee, 49 Đường K, Dĩ An, Bình Dương
+          </span>
+        </p>
+      </div>
+
+      <div
+        style="
+          font-family: 'Dancing Script', cursive;
+          color: #555;
+          font-size: 20px;
+          margin-top: 15px;
+        "
+      >
+        — Mong bạn sẽ thích dịch vụ của bên mình —
+      </div>
+    </div>
+
+    <script>
+      const envelope = document.getElementById("envelope");
+      const card = document.getElementById("invitation");
+      let opened = false;
+
+      envelope.addEventListener("click", () => {
+        if (opened) return;
+        opened = true;
+        envelope.classList.add("open");
+
+        setTimeout(() => {
+          envelope.style.transform = "translateY(-70px) scale(0.9)";
+        }, 1800);
+
+        setTimeout(() => {
+          envelope.style.opacity = "0";
+          card.classList.add("show");
+        }, 2900);
+      });
+    </script>
+  </body>
+</html>
